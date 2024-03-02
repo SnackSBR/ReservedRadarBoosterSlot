@@ -1,6 +1,6 @@
 {
     "name": "ReservedRadarBoosterSlot",
-    "version_number": "1.0.3",
+    "version_number": "1.0.4",
     "website_url": "https://github.com/SnackSBR/ReservedRadarBoosterSlot",
     "description": "Dedicated slot for the Radar Booster.",
     "dependencies": [

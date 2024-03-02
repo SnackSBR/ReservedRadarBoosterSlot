@@ -8,6 +8,6 @@ namespace ReservedRadarBoosterSlot
     {
         public const string GUID = "snacksbr.lethalcompany.reservedradarboosterslot";
         public const string NAME = "ReservedRadarBoosterSlot";
-        public const string VERSION = "1.0.0";
+        public const string VERSION = "1.0.4";
     }
 }

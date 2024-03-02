@@ -6,6 +6,7 @@ using System.Collections;
 using ReservedItemSlotCore.Patches;
 using ReservedItemSlotCore;
 using ReservedRadarBoosterSlot.Compat;
+using System;
 
 namespace ReservedRadarBoosterSlot.Input
 {
@@ -75,8 +76,20 @@ namespace ReservedRadarBoosterSlot.Input
 
             if (!ReservedItemPatcher.IsItemSlotEmpty(radar, LocalPlayerController) && ReservedItemPatcher.CanSwapToReservedHotbarSlot())
             {
-                LocalPlayerController.StartCoroutine(ShuffleItems(radar));
+                try
+                {
+                    LocalPlayerController.StartCoroutine(ShuffleItems(radar));
+                }
+                catch (Exception ex)
+                {
+                    Plugin.mls.LogError(ex.Message);
+                    Plugin.mls.LogError(ex.StackTrace);
+                    HUDManager.Instance.chatText.text += $"Error when dropping ${radar.itemName}";
+                }
             }
+
+            ReservedItemSlotCore.Input.Keybinds.holdingModifierKey = false;
+            ReservedItemPatcher.FocusReservedHotbarSlots(false);
         }
 
         private static IEnumerator ShuffleItems(ReservedItemInfo radar)
@@ -90,8 +103,6 @@ namespace ReservedRadarBoosterSlot.Input
             yield return new WaitForSeconds(0.1f);
             LocalPlayerController.DiscardHeldObject();
             yield return new WaitForSeconds(0.1f);
-            ReservedItemSlotCore.Input.Keybinds.holdingModifierKey = false;
-            ReservedItemPatcher.FocusReservedHotbarSlots(false);
         }
     }
 }
