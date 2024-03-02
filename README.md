@@ -1,3 +1,3 @@
 # ReservedRadarBoosterSlot
-<strong>Requires: <a href="https://thunderstore.io/c/lethal-company/p/FlipMods/ReservedItemSlotCore/">ReservedItemSlotCore</a></strong>, <a href="https://thunderstore.io/c/lethal-company/p/malco/Lategame_Upgrades/">LateGameUpgrades</a></strong> and, optionally <a href="https://thunderstore.io/c/lethal-company/p/Rune580/LethalCompany_InputUtils/">LethalCompany InputUtils</a></strong><br>
-Dedicated slot for the Radar Booster.
+<strong>Requires: <a href="https://thunderstore.io/c/lethal-company/p/FlipMods/ReservedItemSlotCore/">ReservedItemSlotCore</a></strong> and, optionally, <a href="https://thunderstore.io/c/lethal-company/p/Rune580/LethalCompany_InputUtils/">LethalCompany InputUtils</a> (recommended)</strong><br><br>
+Dedicated slot for the Radar Booster. You can press R to activate and drop the Radar Booster on the ground. Keybind can be changed and you can also disable the keybind and just use as a normal reserved slot.

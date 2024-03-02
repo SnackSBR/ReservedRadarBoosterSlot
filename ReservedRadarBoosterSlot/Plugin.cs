@@ -13,7 +13,6 @@ namespace ReservedRadarBoosterSlot
     [BepInPlugin(Metadata.GUID, Metadata.NAME, Metadata.VERSION)]
     [BepInDependency("FlipMods.ReservedItemSlotCore", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rune580.LethalCompanyInputUtils", BepInDependency.DependencyFlags.SoftDependency)]
-    [BepInDependency("com.malco.lethalcompany.moreshipupgrades", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
         public static Plugin Instance;
@@ -37,7 +36,7 @@ namespace ReservedRadarBoosterSlot
                 types = e.Types.Where(t => t != null);
             }
 
-            if (InputUtils_Compat.Enabled)
+            if (Settings.DeployRadarBooster.Value && InputUtils_Compat.Enabled)
             {
                 InputUtils_Compat.Init();
             }

@@ -62,8 +62,5 @@
 		<Reference Include="ReservedItemSlotCore" Publicize="true">
 			<HintPath>$(LC_PLUGIN)\FlipMods-ReservedItemSlotCore\ReservedItemSlotCore.dll</HintPath>
 		</Reference>
-		<Reference Include="MoreShipUpgrades" Publicize="true">
-			<HintPath>$(LC_PLUGIN)\malco-Lategame_Upgrades\MoreShipUpgrades\MoreShipUpgrades.dll</HintPath>
-		</Reference>
 	</ItemGroup>
 </Project>

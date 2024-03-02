@@ -2,10 +2,10 @@
 using HarmonyLib;
 using UnityEngine.InputSystem;
 using UnityEngine;
-using MoreShipUpgrades.Compat;
 using System.Collections;
 using ReservedItemSlotCore.Patches;
 using ReservedItemSlotCore;
+using ReservedRadarBoosterSlot.Compat;
 
 namespace ReservedRadarBoosterSlot.Input
 {
@@ -22,18 +22,21 @@ namespace ReservedRadarBoosterSlot.Input
         [HarmonyPrefix]
         public static void AddToKeybindMenu()
         {
-            if (InputUtils_Compat.Enabled)
+            if(Settings.DeployRadarBooster.Value)
             {
-                Asset = InputUtils_Compat.Asset;
-                ActionMap = Asset.actionMaps[0];
-                DropRadarBoosterAction = IngameKeybinds.Instance.DropRadarBoosterAction;
-            }
-            else
-            {
-                Asset = ScriptableObject.CreateInstance<InputActionAsset>();
-                ActionMap = new InputActionMap("ReservedRadarBoosterSlot");
-                InputActionSetupExtensions.AddActionMap(Asset, ActionMap);
-                DropRadarBoosterAction = InputActionSetupExtensions.AddAction(ActionMap, "ReservedRadarBoosterSlot.DropRadarBoosterAction", binding: Settings.DropRadarBoosterKey.Value, interactions: "Press");
+                if (InputUtils_Compat.Enabled)
+                {
+                    Asset = InputUtils_Compat.Asset;
+                    ActionMap = Asset.actionMaps[0];
+                    DropRadarBoosterAction = IngameKeybinds.Instance.DropRadarBoosterAction;
+                }
+                else
+                {
+                    Asset = ScriptableObject.CreateInstance<InputActionAsset>();
+                    ActionMap = new InputActionMap("ReservedRadarBoosterSlot");
+                    InputActionSetupExtensions.AddActionMap(Asset, ActionMap);
+                    DropRadarBoosterAction = InputActionSetupExtensions.AddAction(ActionMap, "ReservedRadarBoosterSlot.DropRadarBoosterAction", binding: Settings.DeployRadarBoosterKey.Value, interactions: "Press");
+                }
             }
         }
 
@@ -41,16 +44,22 @@ namespace ReservedRadarBoosterSlot.Input
         [HarmonyPostfix]
         public static void OnEnable()
         {
-            Asset.Enable();
-            DropRadarBoosterAction.performed += OnDropRadarBoosterPerformed;
+            if(Settings.DeployRadarBooster.Value)
+            {
+                Asset.Enable();
+                DropRadarBoosterAction.performed += OnDropRadarBoosterPerformed;
+            }
         }
 
         [HarmonyPatch(typeof(StartOfRound), "OnDisable")]
         [HarmonyPostfix]
         public static void OnDisable()
         {
-            Asset.Disable();
-            DropRadarBoosterAction.performed -= OnDropRadarBoosterPerformed;
+            if (Settings.DeployRadarBooster.Value)
+            {
+                Asset.Disable();
+                DropRadarBoosterAction.performed -= OnDropRadarBoosterPerformed;
+            }
         }
 
         private static void OnDropRadarBoosterPerformed(InputAction.CallbackContext context)
