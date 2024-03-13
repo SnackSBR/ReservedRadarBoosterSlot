@@ -7,6 +7,8 @@ using ReservedItemSlotCore.Patches;
 using ReservedItemSlotCore;
 using ReservedRadarBoosterSlot.Compat;
 using System;
+using ReservedItemSlotCore.Data;
+using System.Collections.Generic;
 
 namespace ReservedRadarBoosterSlot.Input
 {
@@ -23,7 +25,7 @@ namespace ReservedRadarBoosterSlot.Input
         [HarmonyPrefix]
         public static void AddToKeybindMenu()
         {
-            if(Settings.DeployRadarBooster.Value)
+            if (Settings.DeployRadarBooster.Value)
             {
                 if (InputUtils_Compat.Enabled)
                 {
@@ -45,7 +47,7 @@ namespace ReservedRadarBoosterSlot.Input
         [HarmonyPostfix]
         public static void OnEnable()
         {
-            if(Settings.DeployRadarBooster.Value)
+            if (Settings.DeployRadarBooster.Value)
             {
                 Asset.Enable();
                 DropRadarBoosterAction.performed += OnDropRadarBoosterPerformed;
@@ -65,44 +67,42 @@ namespace ReservedRadarBoosterSlot.Input
 
         private static void OnDropRadarBoosterPerformed(InputAction.CallbackContext context)
         {
-            if(LocalPlayerController == null || !LocalPlayerController.isPlayerControlled || (LocalPlayerController.IsServer && !LocalPlayerController.isHostPlayerObject))
+            if (LocalPlayerController == null || !LocalPlayerController.isPlayerControlled || (LocalPlayerController.IsServer && !LocalPlayerController.isHostPlayerObject))
             {
                 return;
             }
 
-            ReservedItemInfo radar = Plugin.RadarBoosterInfo;
-
-            ReservedItemSlotCore.Input.Keybinds.holdingModifierKey = true;
-
-            if (!ReservedItemPatcher.IsItemSlotEmpty(radar, LocalPlayerController) && ReservedItemPatcher.CanSwapToReservedHotbarSlot())
+            try
             {
-                try
+                if (SessionManager.unlockedReservedItemSlotsDict.TryGetValue(Plugin.RadarSlot.slotName, out var RadarSlot))
                 {
-                    LocalPlayerController.StartCoroutine(ShuffleItems(radar));
-                }
-                catch (Exception ex)
-                {
-                    Plugin.mls.LogError(ex.Message);
-                    Plugin.mls.LogError(ex.StackTrace);
-                    HUDManager.Instance.chatText.text += $"Error when dropping ${radar.itemName}";
+                    List<ReservedItemSlotData> focusReservedItemSlots = [RadarSlot];
+                    if (focusReservedItemSlots.Count > 0)
+                    {
+                        ReservedHotbarManager.ForceToggleReservedHotbar(focusReservedItemSlots.ToArray());
+                        LocalPlayerController.StartCoroutine(ShuffleItems());
+                    }
                 }
             }
-
-            ReservedItemSlotCore.Input.Keybinds.holdingModifierKey = false;
-            ReservedItemPatcher.FocusReservedHotbarSlots(false);
+            catch (Exception ex)
+            {
+                Plugin.mls.LogError(ex.Message);
+                Plugin.mls.LogError(ex.StackTrace);
+                HUDManager.Instance.chatText.text += $"Error when dropping Radar Booster";
+            }
         }
 
-        private static IEnumerator ShuffleItems(ReservedItemInfo radar)
+        private static IEnumerator ShuffleItems()
         {
-            ReservedPlayerData reservedPlayerData = PlayerPatcher.playerDataLocal;
-            ReservedItemPatcher.FocusReservedHotbarSlots(true);
+            yield return new WaitForSeconds(0.2f);
+            if (LocalPlayerController.currentlyHeldObjectServer != null)
+            {
+                ((RadarBoosterItem)LocalPlayerController.currentlyHeldObjectServer).EnableRadarBooster(true);
+                yield return new WaitForSeconds(0.1f);
+                LocalPlayerController.DiscardHeldObject();
+            }
             yield return new WaitForSeconds(0.1f);
-            ReservedItemPatcher.SwitchToItemSlot(LocalPlayerController, reservedPlayerData.reservedHotbarStartIndex + radar.reservedItemIndex, null);
-            yield return new WaitForSeconds(0.1f);
-            ((RadarBoosterItem)LocalPlayerController.currentlyHeldObjectServer).EnableRadarBooster(true);
-            yield return new WaitForSeconds(0.1f);
-            LocalPlayerController.DiscardHeldObject();
-            yield return new WaitForSeconds(0.1f);
+            ReservedHotbarManager.FocusReservedHotbarSlots(false);
         }
     }
 }

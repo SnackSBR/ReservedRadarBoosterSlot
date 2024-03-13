@@ -1,10 +1,10 @@
 {
     "name": "ReservedRadarBoosterSlot",
-    "version_number": "1.0.4",
+    "version_number": "1.0.5",
     "website_url": "https://github.com/SnackSBR/ReservedRadarBoosterSlot",
     "description": "Dedicated slot for the Radar Booster.",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100",
-        "FlipMods-ReservedItemSlotCore-1.8.9"
+        "FlipMods-ReservedItemSlotCore-2.0.2"
     ]
 }
